@@ -1,0 +1,112 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>LAB</title>
+</head>
+<body>
+    <?php
+$nameErr="";
+$emailErr="";
+$dobErr="";
+$genderErr="";
+$degreeErr="";
+$bgErr="";
+$success="";
+ 
+if($_SERVER["REQUEST_METHOD"]=="POST") {
+ 
+    $name=trim($_POST["name"]);
+    if(empty($name)) {
+        $nameErr="Name cannot be empty";
+    } elseif(str_word_count($name)<2) {
+        $nameErr="Must contain at least two words";
+    } elseif(!preg_match("/^[A-Za-z][A-Za-z\.\-\s]+$/", $name)) {
+        $nameErr="Invalid name format";
+    }
+}
+
+    $email=trim($_POST["email"]);
+    if(empty($email)) {
+        $emailErr="Email cannot be empty";
+    } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailErr="Invalid email address";
+    }
+ 
+
+    $dd = $_POST["dd"];
+    $mm = $_POST["mm"];
+    $yy = $_POST["yy"];
+    if(empty($dd) || empty($mm) || empty($yy)) {
+        $dobErr="Date of birth required";
+    if(!isset($_POST["gender"])) {
+        $genderErr="Select a gender";
+    }
+ 
+    if(!isset($_POST["degree"])||count($_POST["degree"])<2) {
+        $degreeErr="Select at least two degrees";
+    }
+ 
+    if(empty($_POST["bg"])) {
+        $bgErr="Select blood group";
+    }
+ 
+
+    if(
+        empty($nameErr)&&empty($emailErr)&&empty($dobErr)&&
+        empty($genderErr)&&empty($degreeErr)&&empty($bgErr)
+    ) {
+        $success="All inputs are valid";
+    }
+}
+?>
+ 
+<h2>Registration Form</h2>
+ 
+<form method="post">
+ 
+
+    Name:<input type="text" name="name">
+    <?php echo $nameErr; ?><br>
+ 
+
+    Email:<input type="text" name="email">
+    <?php echo $emailErr; ?><br>
+ 
+    Date of Birth:
+    <input type="number" name="dd" placeholder="DD" style="width:60px">
+    <input type="number" name="mm" placeholder="MM" style="width:60px">
+    <input type="number" name="yy" placeholder="YYYY" style="width:80px">
+    <?php echo $dobErr; ?><br>
+ 
+    Gender:
+    <input type="radio" name="gender" value="Male">Male
+    <input type="radio" name="gender" value="Female">Female
+    <?php echo $genderErr; ?><br>
+ 
+    Degree:
+    <input type="checkbox" name="degree[]" value="SSC">SSC
+    <input type="checkbox" name="degree[]" value="HSC">HSC
+    <input type="checkbox" name="degree[]" value="BSc">BSc
+    <input type="checkbox" name="degree[]" value="MSc">MSc
+    <?php echo $degreeErr; ?><br>
+ 
+    Blood Group:
+    <select name="bg">
+        <option value="">Select</option>
+        <option>A+</option>
+        <option>A-</option>
+        <option>B+</option>
+        <option>O+</option>
+        <option>O-</option>
+    </select>
+    <?php echo $bgErr; ?><br>
+ 
+    <input type="submit" value="Submit">
+ 
+</form>
+ 
+<h3 style="color:green;"><?php echo $success; ?></h3>
+ 
+</body>
+</html>
+ 
